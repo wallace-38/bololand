@@ -12,6 +12,17 @@ if(!empty($_POST)){
     $cidade = trim($_POST["cidade"]);
     $uf = trim($_POST["uf"]);
 
+    $sql = "insert into endereco (cep, logradouro, bairro, cidade, uf) values ('$cep', '$logradouro', '$bairro', '$cidade', '$uf')";
+
+    $sqluser = "insert into usuario (nome, email, tel, numero, complemento, senha, cep) value ('$nome', '$email', '$tel', '$numero', '$complemento', '$senha', '$cep')";
+
+    
+
+    $conn = mysqli_connect("localhost", "root", "", "bololand");
+    mysqli_set_charset($conn, "utf8");
+    mysqli_query($conn, htmlspecialchars($sql)) or die (mysqli_error($conn));
+    mysqli_query($conn, htmlspecialchars($sqluser)) or die (mysqli_error($conn));
+    mysqli_close($conn);
     
 }
 ?>
