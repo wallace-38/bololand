@@ -1,5 +1,6 @@
 <?php
-if(!empty($_POST)){
+include_once('mensagens.php');
+if (!empty($_POST)) {
     $nome = trim($_POST["nome"]);
     $email = trim($_POST["email"]);
     $tel = trim($_POST["tel"]);
@@ -10,31 +11,38 @@ if(!empty($_POST)){
     $logradouro = trim($_POST["logradouro"]);
     $bairro = trim($_POST["bairro"]);
     $cidade = trim($_POST["cidade"]);
-    $uf = trim($_POST["uf"]);
+    $uf = trim($_POST["uf"]); 
+    
+    $sql = "insert into endereco (cep, logradouro, bairro, cidade, uf) values ('$cep' , '$logradouro', '$bairro', '$cidade', '$uf')";
 
-    $sql = "insert into endereco (cep, logradouro, bairro, cidade, uf) values ('$cep', '$logradouro', '$bairro', '$cidade', '$uf')";
+    $sqlUser = "insert into usuario (nome, email, tel, numero, complemento, senha, cep) values ('$nome', '$email', '$tel', '$numero', '$complemento', '$senha', '$cep')";
 
-    $sqluser = "insert into usuario (nome, email, tel, numero, complemento, senha, cep) value ('$nome', '$email', '$tel', '$numero', '$complemento', '$senha', '$cep')";
-
-    $sqlCep="select cep from endereco where cep= $cep";
-    //conrcta o banco de dados
-    $conn = mysqli_connect("localhost", "root", "", "bololand");
+    $sqlCep = "select cep from endereco where cep = $cep";
+    
+    //Conecta o banco de dados
+    $conn = mysqli_connect(LOCAL, USER, PASS, BASE);
     mysqli_set_charset($conn, "utf8");
 
-    if(!$result){
-    //busca cep - endereco
-    mysqli_query($conn, htmlspecialchars($sql)) or die (mysqli_error($conn));
+    //Busca do CEP - Endereco
+    $result = mysqli_query($conn, htmlspecialchars($sqlCep)) or die(mysqli_error($conn));
+     
+    if (mysqli_num_rows($result) == 0) {
+        //Cadastro do CEP - Endereco
+        mysqli_query($conn, htmlspecialchars($sql)) or die(mysqli_error($conn));
     }
-    //cadastro de usuario
-    $salvo = mysqli_query($conn, htmlspecialchars($sqluser)) or die (mysqli_error($conn));
-    if($salvo){
-        echo "<div class='alert alert-success'>Salvo</div>";
-    } else { echo "<div class='alert alert-danger'>Erro ao Salvar!</div>";
+    //Cadastro do Usuario
+    $salvo = mysqli_query($conn, htmlspecialchars($sqlUser)) or die(mysqli_error($conn));
+    if ($salvo){
+        //echo "<div class='alert alert-success'> Salvo </div>";
+        aviso("Salvo");
+    } else {
+        //echo "<div class='alert alert-danger'> Erro ao salvar! </div>";
+        erro("Erro ao Salvar");
     }
-    //fechar cadastro
+
     mysqli_close($conn);
-    
 }
+
 ?>
 
 <section class="container bg-branco">
@@ -67,7 +75,7 @@ if(!empty($_POST)){
         </div>
         <div class="form-group">
             <label>Endereço</label>
-            <input type="text" class="form-control" name="logradouro" maxlength="150" id="rua">
+            <input type="text" class="form-control" name="logradouro" maxlength="100" id="rua">
         </div>
         <div class="form-group">
             <label>Bairro</label>
@@ -90,7 +98,5 @@ if(!empty($_POST)){
             <button type="submit" class="btn bg-azul branco">Enviar</button>
             <button type="reset" class="btn btn-danger branco">Cancelar</button>
         </div>
-
     </form>
 </section>
-
