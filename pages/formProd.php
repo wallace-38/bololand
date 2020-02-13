@@ -1,37 +1,24 @@
 <?php
-include_once('mensagens.php');
-if (!empty($_POST)) {
-    $nome = trim($_POST["nome"]);
-    $email = trim($_POST["email"]);
-    $tel = trim($_POST["tel"]);
-    $numero = trim($_POST["numero"]);
-    $complemento = trim($_POST["complemento"]);
-    $senha = trim($_POST["senha"]);
-    $cep = trim($_POST["cep"]);
-    $logradouro = trim($_POST["logradouro"]);
-    $bairro = trim($_POST["bairro"]);
-    $cidade = trim($_POST["cidade"]);
-    $uf = trim($_POST["uf"]); 
-    
-    $sql = "insert into endereco (cep, logradouro, bairro, cidade, uf) values ('$cep' , '$logradouro', '$bairro', '$cidade', '$uf')";
+include_once('pages/mensagens.php');
+if(!empty($_POST)){
+    $produto = trim($_POST["nomeproduto"]);
+    $descricao = trim($_POST["descproduto"]);
+    $quantidade = trim($_POST["quantproduto"]);
+    $valor = trim($_POST["valproduto"]);
+    trim($_POST["ativo"]) ? $ativo = 1 : $ativo = 0;
 
-    $sqlUser = "insert into usuario (nome, email, tel, numero, complemento, senha, cep) values ('$nome', '$email', '$tel', '$numero', '$complemento', '$senha', '$cep')";
 
-    $sqlCep = "select cep from endereco where cep = $cep";
-    
-    //Conecta o banco de dados
+    $sqlproduto = "insert into produto (nome, descricao, quantidade, valor, ativo) values ('$produto', '$descricao', '$quantidade', '$valor', '$ativo')";
+    echo "<meta HTTP-EQUIV='refresh' CONTENT='2;URL=http://localhost/2019.4/bololand/admin.php?pag=prod'>";
+
+    //conecta no banco de dados
     $conn = mysqli_connect(LOCAL, USER, PASS, BASE);
-    mysqli_set_charset($conn, "utf8");
+    mysqli_set_charset($conn, "utf-8");
+    
+    
+    //cadastra o produto - endereço
+    $salvo = mysqli_query($conn, htmlspecialchars($sqlproduto)) or die (mysqli_error($conn));
 
-    //Busca do CEP - Endereco
-    $result = mysqli_query($conn, htmlspecialchars($sqlCep)) or die(mysqli_error($conn));
-     
-    if (mysqli_num_rows($result) == 0) {
-        //Cadastro do CEP - Endereco
-        mysqli_query($conn, htmlspecialchars($sql)) or die(mysqli_error($conn));
-    }
-    //Cadastro do Usuario
-    $salvo = mysqli_query($conn, htmlspecialchars($sqlUser)) or die(mysqli_error($conn));
     if ($salvo){
         //echo "<div class='alert alert-success'> Salvo </div>";
         aviso("Salvo");
@@ -45,58 +32,32 @@ if (!empty($_POST)) {
 
 ?>
 
-<section class="container bg-branco">
-    <h3 class="center">Dados do usuário</h3>
-    <form method="post" action="index.php?pag=cad">
+    <section class="container bg-branco">
+        
+        <form method="post" action="admin.php?pag=prod">
         <div class="form-group">
             <label>Nome</label>
-            <input type="text" class="form-control" name="nome">
+            <input type="text" class="form-control" name="nomeproduto" maxlength="100">
         </div>
         <div class="form-group">
-            <label>E-mail</label>
-            <input type="email" class="form-control" name="email">
+            <label>Descrição</label>
+            <input type="text" class="form-control" name="descproduto" maxlength="200">
         </div>
         <div class="form-group">
-            <label>Telefone</label>
-            <input type="text" class="form-control" name="tel">
+            <label>Quantidade</label>
+            <input type="number" class="form-control" name="quantproduto">
         </div>
         <div class="form-group">
-            <label>Numero</label>
-            <input type="text" class="form-control" name="numero">
+            <label>Valor</label>
+            <input type="number" class="form-control" name="valproduto">
         </div>
-        <div class="form-group">
-            <label>Complemento</label>
-            <input type="text" class="form-control" name="complemento">
-        </div>
-
-        <div class="form-group">
-            <label>CEP</label>
-            <input type="text" class="form-control" name="cep" maxlength="9" id="cep" onblur="pesquisacep(this.value);">
-        </div>
-        <div class="form-group">
-            <label>Endereço</label>
-            <input type="text" class="form-control" name="logradouro" maxlength="100" id="rua">
-        </div>
-        <div class="form-group">
-            <label>Bairro</label>
-            <input type="text" class="form-control" name="bairro" maxlength="50" id="bairro">
-        </div>
-        <div class="form-group">
-            <label>Cidade</label>
-            <input type="text" class="form-control" name="cidade" maxlength="50" id="cidade">
-        </div>
-        <div class="form-group">
-            <label>Estado</label>
-            <input type="text" class="form-control" name="uf" maxlength="2" id="uf">
-        </div>
-
-        <div class="form-group">
-            <label>Senha</label>
-            <input type="password" class="form-control" name="senha">
+        <div class="form-check">
+            <input type="checkbox" class="form-chech" name="ativo" checked>
+            <label>Ativo</label>
         </div>
         <div class="form-group text-right">
-            <button type="submit" class="btn bg-azul branco">Enviar</button>
-            <button type="reset" class="btn btn-danger branco">Cancelar</button>
+            <button type="submit" class="btn bg-azul branco pr-3">Enviar</button>
+            <button type="reset" class="btn btn-danger branco">Limpar</button>
         </div>
-    </form>
-</section>
+        </form>
+        </section>

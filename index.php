@@ -13,8 +13,8 @@ include_once("config.php");
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/cores.css">
     <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/cores.css">
 </head>
 
 <body class="bg-azul-claro">
@@ -38,7 +38,7 @@ include_once("config.php");
                         <a class="nav-link" href="index.php">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php#produtos">Produtos</a>
+                        <a class="nav-link" href="admin.php#produtos">Produtos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="index.php#clientes">Clientes</a>
@@ -63,10 +63,9 @@ include_once("config.php");
         if (!empty($_GET)) {
             if ($_GET["pag"] == "cad") {
                 include("pages/formUser.php");
-            } else if ($_GET["pag"] == "log") {
+            }
+            if ($_GET["pag"] == "log") {
                 include("pages/login.php");
-            } else {
-                include("pages/inicio.php");
             }
         } else {
             include("pages/inicio.php");
